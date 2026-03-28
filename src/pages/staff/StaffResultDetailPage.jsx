@@ -80,26 +80,43 @@ const StaffResultDetailPage = () => {
     <PageWrapper
       title="Result Details"
       action={
-        <div className="flex gap-2 flex-wrap">
-          <Link to="/staff/results" className="btn-secondary">
+        <div className="flex items-center gap-1.5">
+          <Link to="/staff/results" className="btn-secondary !px-3" title="Back">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <span className="hidden sm:inline">Back</span>
           </Link>
           {result && (
             <>
-              <button onClick={handleToggleVisibility} className="btn-secondary" title={result.isVisible ? 'Hide from patient' : 'Show to patient'}>
+              <button
+                onClick={handleToggleVisibility}
+                className="btn-secondary !px-3"
+                title={result.isVisible ? 'Hide from patient' : 'Show to patient'}
+              >
                 {result.isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 <span className="hidden sm:inline">{result.isVisible ? 'Hide' : 'Show'}</span>
               </button>
-              <button onClick={handleSendEmail} disabled={sending} className="btn-secondary" title="Email report to patient">
+              <button
+                onClick={handleSendEmail}
+                disabled={sending}
+                className="btn-secondary !px-3"
+                title="Email report to patient"
+              >
                 <Mail className="w-4 h-4" />
                 <span className="hidden sm:inline">{sending ? 'Sending…' : 'Email'}</span>
               </button>
-              <button onClick={handleRegenerate} className="btn-secondary" title="Regenerate AI summary">
+              <button
+                onClick={handleRegenerate}
+                className="btn-secondary !px-3"
+                title="Regenerate AI summary"
+              >
                 <RefreshCw className="w-4 h-4" />
                 <span className="hidden sm:inline">Regenerate</span>
               </button>
-              <button onClick={handleDelete} className="btn-danger" title="Delete result">
+              <button
+                onClick={handleDelete}
+                className="btn-danger !px-3"
+                title="Delete result"
+              >
                 <Trash2 className="w-4 h-4" />
                 <span className="hidden sm:inline">Delete</span>
               </button>
@@ -112,14 +129,14 @@ const StaffResultDetailPage = () => {
       {!loading && result && (
         <>
           {!result.isVisible && (
-            <div className="flex items-center gap-2.5 mb-5 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 animate-fadeIn">
+            <div className="flex items-center gap-2.5 mb-4 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 animate-fadeIn">
               <EyeOff className="w-4 h-4 flex-shrink-0" />
               This result is currently <strong>hidden</strong> from the patient.
             </div>
           )}
           <ResultDetail result={result} />
           {result.notes && (
-            <div className="card mt-6 border-l-4 border-l-slate-300 animate-fadeIn">
+            <div className="card mt-4 border-l-4 border-l-slate-300 animate-fadeIn">
               <h3 className="font-heading font-semibold text-slate-800 mb-2 text-sm">Internal Notes</h3>
               <p className="text-sm text-slate-600 leading-relaxed">{result.notes}</p>
             </div>

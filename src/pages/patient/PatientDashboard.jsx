@@ -6,7 +6,7 @@ import { CardSkeleton } from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import { useAuth } from '../../auth/AuthContext';
 import useSocket from '../../hooks/useSocket';
-import { FlaskConical, Sparkles, Search, X } from 'lucide-react';
+import { FlaskConical, Sparkles, Search, X, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 
 const STATUS_OPTIONS = ['all', 'normal', 'abnormal', 'critical', 'pending'];
@@ -77,7 +77,7 @@ const PatientDashboard = () => {
   return (
     <PageWrapper>
       {/* Welcome banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 via-primary-600 to-teal-500 p-6 sm:p-8 mb-8 animate-fadeIn">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 via-primary-600 to-teal-500 p-5 sm:p-8 mb-6 animate-fadeIn">
         <div className="absolute inset-0 opacity-10">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
@@ -94,13 +94,13 @@ const PatientDashboard = () => {
         </div>
         <div className="relative z-10 flex items-start justify-between">
           <div>
-            <p className="text-primary-100 text-sm font-medium mb-1">{today}</p>
-            <h1 className="font-heading font-bold text-2xl sm:text-3xl text-white mb-2">
+            <p className="text-primary-100 text-xs font-medium mb-1">{today}</p>
+            <h1 className="font-heading font-bold text-xl sm:text-3xl text-white mb-1.5">
               Hello, {firstName}
             </h1>
-            <p className="text-primary-100 text-sm max-w-md leading-relaxed">
+            <p className="text-primary-100 text-sm max-w-sm leading-relaxed">
               {results.length > 0
-                ? `You have ${results.length} lab result${results.length !== 1 ? 's' : ''}. Click any result to see your easy-to-understand summary.`
+                ? `You have ${results.length} lab result${results.length !== 1 ? 's' : ''}. Tap any result to see your summary.`
                 : 'Your lab results will appear here once uploaded by your lab.'}
             </p>
           </div>
@@ -110,7 +110,6 @@ const PatientDashboard = () => {
         </div>
       </div>
 
-      {/* Skeleton while loading */}
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => <CardSkeleton key={i} />)}
@@ -124,13 +123,13 @@ const PatientDashboard = () => {
       {!loading && !error && (
         <>
           {results.length > 0 && (
-            <div className="mb-4 flex flex-col sm:flex-row gap-3">
+            <div className="mb-4 flex gap-2">
               {/* Search */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search by test name, lab, or code…"
+                  placeholder="Search results…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="input-field pl-9 pr-8"
@@ -145,16 +144,21 @@ const PatientDashboard = () => {
                 )}
               </div>
 
-              {/* Status filter */}
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="input-field sm:w-40 capitalize"
-              >
-                {STATUS_OPTIONS.map((s) => (
-                  <option key={s} value={s}>{s === 'all' ? 'All statuses' : s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                ))}
-              </select>
+              {/* Status filter — compact on mobile */}
+              <div className="relative">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="input-field pr-8 appearance-none w-full sm:w-40 capitalize"
+                >
+                  {STATUS_OPTIONS.map((s) => (
+                    <option key={s} value={s}>
+                      {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              </div>
             </div>
           )}
 
@@ -163,7 +167,7 @@ const PatientDashboard = () => {
               <EmptyState
                 icon={FlaskConical}
                 title="No results yet"
-                description="Your lab results will appear here as soon as your lab uploads them. You'll be able to read a simple AI explanation of each one."
+                description="Your lab results will appear here as soon as your lab uploads them."
               />
             </div>
           )}
@@ -182,11 +186,11 @@ const PatientDashboard = () => {
 
           {filtered.length > 0 && (
             <div>
-              <h2 className="font-heading font-semibold text-sm text-slate-500 uppercase tracking-wider mb-4">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                 {filtered.length === results.length
-                  ? `Your Results (${results.length})`
-                  : `Showing ${filtered.length} of ${results.length}`}
-              </h2>
+                  ? `${results.length} Result${results.length !== 1 ? 's' : ''}`
+                  : `${filtered.length} of ${results.length} results`}
+              </p>
               <div className="space-y-3">
                 {filtered.map((result, i) => (
                   <ResultCard key={result._id} result={result} index={i} />

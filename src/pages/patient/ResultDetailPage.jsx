@@ -74,24 +74,27 @@ const ResultDetailPage = () => {
       title="Result Details"
       action={
         <div className="flex items-center gap-2">
+          <Link to="/patient/dashboard" className="btn-secondary !px-3">
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Back</span>
+          </Link>
           {result && result.aiStatus === 'done' && (
             <>
-              <Link to={`/patient/results/${id}/chat`} className="btn-primary">
-                <MessageCircle className="w-4 h-4" /> Ask Questions
-              </Link>
               <button
                 onClick={handleExportPDF}
                 disabled={exporting}
-                className="btn-secondary"
+                className="btn-secondary !px-3"
+                title="Export PDF"
               >
                 <Download className="w-4 h-4" />
-                {exporting ? 'Exporting…' : 'Export PDF'}
+                <span className="hidden sm:inline">{exporting ? 'Exporting…' : 'Export PDF'}</span>
               </button>
+              <Link to={`/patient/results/${id}/chat`} className="btn-primary !px-3">
+                <MessageCircle className="w-4 h-4" />
+                <span className="hidden sm:inline">Ask Questions</span>
+              </Link>
             </>
           )}
-          <Link to="/patient/dashboard" className="btn-secondary">
-            <ArrowLeft className="w-4 h-4" /> Back
-          </Link>
         </div>
       }
     >
