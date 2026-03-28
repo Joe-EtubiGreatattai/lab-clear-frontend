@@ -82,23 +82,24 @@ const StaffResultDetailPage = () => {
       action={
         <div className="flex gap-2 flex-wrap">
           <Link to="/staff/results" className="btn-secondary">
-            <ArrowLeft className="w-4 h-4" /> Back
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
           </Link>
           {result && (
             <>
-              <button onClick={handleToggleVisibility} className="btn-secondary">
+              <button onClick={handleToggleVisibility} className="btn-secondary" title={result.isVisible ? 'Hide from patient' : 'Show to patient'}>
                 {result.isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 <span className="hidden sm:inline">{result.isVisible ? 'Hide' : 'Show'}</span>
               </button>
-              <button onClick={handleSendEmail} disabled={sending} className="btn-secondary">
+              <button onClick={handleSendEmail} disabled={sending} className="btn-secondary" title="Email report to patient">
                 <Mail className="w-4 h-4" />
-                <span className="hidden sm:inline">{sending ? 'Sending…' : 'Email Report'}</span>
+                <span className="hidden sm:inline">{sending ? 'Sending…' : 'Email'}</span>
               </button>
-              <button onClick={handleRegenerate} className="btn-secondary">
+              <button onClick={handleRegenerate} className="btn-secondary" title="Regenerate AI summary">
                 <RefreshCw className="w-4 h-4" />
-                <span className="hidden sm:inline">Regenerate AI</span>
+                <span className="hidden sm:inline">Regenerate</span>
               </button>
-              <button onClick={handleDelete} className="btn-danger">
+              <button onClick={handleDelete} className="btn-danger" title="Delete result">
                 <Trash2 className="w-4 h-4" />
                 <span className="hidden sm:inline">Delete</span>
               </button>

@@ -105,8 +105,48 @@ const AllResultsPage = () => {
         </select>
       </div>
 
-      {/* Table */}
-      <div className="card overflow-hidden">
+      {/* Mobile card list */}
+      <div className="sm:hidden space-y-3 mb-2">
+        {loading && Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="card animate-pulse">
+            <div className="h-4 bg-slate-100 rounded w-3/4 mb-2" />
+            <div className="h-3 bg-slate-100 rounded w-1/2" />
+          </div>
+        ))}
+        {!loading && filtered.length === 0 && (
+          <EmptyState
+            icon={FlaskConical}
+            title="No results found"
+            description={search ? `Nothing matched "${search}".` : 'No results have been added yet.'}
+          />
+        )}
+        {!loading && filtered.map((r, i) => (
+          <Link
+            key={r._id}
+            to={`/staff/results/${r._id}`}
+            className="card block hover:border-primary-200 hover:shadow-md transition-all animate-fadeIn"
+            style={{ animationDelay: `${Math.min(i, 10) * 0.03}s` }}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-semibold text-slate-800 text-sm leading-snug">{r.testName}</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  {r.patient ? `${r.patient.firstName} ${r.patient.lastName}` : '—'}
+                  {r.patient?.mrn && <span className="ml-2 font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-400">{r.patient.mrn}</span>}
+                </p>
+                <p className="text-xs text-slate-400 mt-0.5">{format(new Date(r.collectionDate), 'MMM d, yyyy')}</p>
+              </div>
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <Badge status={r.status} />
+                {aiStatusChip(r.aiStatus)}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="card overflow-hidden hidden sm:block">
         <div className="overflow-x-auto -mx-6">
           <table className="w-full text-sm">
             <thead>
