@@ -5,7 +5,7 @@ import ResultDetail from '../../components/patient/ResultDetail';
 import PageWrapper from '../../components/common/PageWrapper';
 import { ResultDetailSkeleton } from '../../components/common/Skeleton';
 import useSocket from '../../hooks/useSocket';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ResultDetailPage = () => {
@@ -75,14 +75,19 @@ const ResultDetailPage = () => {
       action={
         <div className="flex items-center gap-2">
           {result && result.aiStatus === 'done' && (
-            <button
-              onClick={handleExportPDF}
-              disabled={exporting}
-              className="btn-secondary"
-            >
-              <Download className="w-4 h-4" />
-              {exporting ? 'Exporting…' : 'Export PDF'}
-            </button>
+            <>
+              <Link to={`/patient/results/${id}/chat`} className="btn-primary">
+                <MessageCircle className="w-4 h-4" /> Ask Questions
+              </Link>
+              <button
+                onClick={handleExportPDF}
+                disabled={exporting}
+                className="btn-secondary"
+              >
+                <Download className="w-4 h-4" />
+                {exporting ? 'Exporting…' : 'Export PDF'}
+              </button>
+            </>
           )}
           <Link to="/patient/dashboard" className="btn-secondary">
             <ArrowLeft className="w-4 h-4" /> Back

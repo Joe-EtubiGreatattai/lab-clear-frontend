@@ -11,6 +11,7 @@ const LoginPage            = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage         = lazy(() => import('./pages/auth/RegisterPage'));
 const PatientDashboard     = lazy(() => import('./pages/patient/PatientDashboard'));
 const PatientResultDetailPage = lazy(() => import('./pages/patient/ResultDetailPage'));
+const PatientResultChatPage   = lazy(() => import('./pages/patient/ResultChatPage'));
 const StaffDashboard       = lazy(() => import('./pages/staff/StaffDashboard'));
 const AddResultPage        = lazy(() => import('./pages/staff/AddResultPage'));
 const ManagePatientsPage   = lazy(() => import('./pages/staff/ManagePatientsPage'));
@@ -55,6 +56,14 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute allowedRoles={['patient']}>
                 <PatientResultDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/patient/results/:id/chat"
+            element={
+              <ProtectedRoute allowedRoles={['patient']}>
+                <PatientResultChatPage />
               </ProtectedRoute>
             }
           />

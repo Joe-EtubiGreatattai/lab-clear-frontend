@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { FlaskConical, LogOut, User, Menu, X, ChevronDown } from 'lucide-react';
 
-const NavLink = ({ to, children, onClick }) => {
+const NavLink = ({ to, end = false, children, onClick }) => {
   const { pathname } = useLocation();
-  const active = pathname === to || pathname.startsWith(to + '/');
+  const active = end ? pathname === to : (pathname === to || pathname.startsWith(to + '/'));
   return (
     <Link
       to={to}
@@ -25,10 +25,10 @@ const NavLink = ({ to, children, onClick }) => {
 };
 
 const staffLinks = [
-  { to: '/staff/dashboard', label: 'Dashboard' },
-  { to: '/staff/results',   label: 'All Results' },
-  { to: '/staff/patients',  label: 'Patients' },
-  { to: '/staff/results/add', label: 'Add Result' },
+  { to: '/staff/dashboard',    label: 'Dashboard' },
+  { to: '/staff/results',      label: 'All Results', end: true },
+  { to: '/staff/patients',     label: 'Patients' },
+  { to: '/staff/results/add',  label: 'Add Result' },
 ];
 
 const patientLinks = [
@@ -72,7 +72,7 @@ const Navbar = () => {
             {user && (
               <div className="hidden md:flex items-center gap-6 border-b border-transparent h-full">
                 {links.map((l) => (
-                  <NavLink key={l.to} to={l.to}>{l.label}</NavLink>
+                  <NavLink key={l.to} to={l.to} end={l.end}>{l.label}</NavLink>
                 ))}
               </div>
             )}
