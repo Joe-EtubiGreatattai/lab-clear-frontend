@@ -5,7 +5,7 @@ import ResultDetail from '../../components/patient/ResultDetail';
 import PageWrapper from '../../components/common/PageWrapper';
 import Spinner from '../../components/common/Spinner';
 import useSocket from '../../hooks/useSocket';
-import { ArrowLeft, Eye, EyeOff, RefreshCw, Trash2, Mail } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, RefreshCw, Trash2, Mail, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const StaffResultDetailPage = () => {
@@ -85,6 +85,12 @@ const StaffResultDetailPage = () => {
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Back</span>
           </Link>
+          {result && (
+            <Link to={`/staff/results/${id}/chat`} className="btn-primary !px-3" title="Ask AI">
+              <MessageSquare className="w-4 h-4" />
+              <span className="hidden sm:inline">Ask AI</span>
+            </Link>
+          )}
           {result && (
             <>
               <button

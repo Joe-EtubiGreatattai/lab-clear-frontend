@@ -13,3 +13,6 @@ export const extractFromImageApi = (image, mediaType) =>
 export const sendReportEmailApi = (id) => axiosClient.post(`/results/${id}/send-email`);
 export const chatWithResultApi = (id, question, history) =>
   axiosClient.post(`/ai/results/${id}/chat`, { question, history });
+
+export const staffChatWithResultApi = (id, question, history) =>
+  axiosClient.post(`/ai/results/${id}/chat`, { question, history });

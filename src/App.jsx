@@ -16,6 +16,7 @@ const StaffDashboard       = lazy(() => import('./pages/staff/StaffDashboard'));
 const AddResultPage        = lazy(() => import('./pages/staff/AddResultPage'));
 const ManagePatientsPage   = lazy(() => import('./pages/staff/ManagePatientsPage'));
 const StaffResultDetailPage = lazy(() => import('./pages/staff/StaffResultDetailPage'));
+const StaffResultChatPage   = lazy(() => import('./pages/staff/StaffResultChatPage'));
 const AllResultsPage       = lazy(() => import('./pages/staff/AllResultsPage'));
 
 const PageLoader = () => (
@@ -90,6 +91,14 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute allowedRoles={['lab_staff']}>
                 <StaffResultDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/staff/results/:id/chat"
+            element={
+              <ProtectedRoute allowedRoles={['lab_staff']}>
+                <StaffResultChatPage />
               </ProtectedRoute>
             }
           />
