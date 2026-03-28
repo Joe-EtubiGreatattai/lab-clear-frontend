@@ -91,7 +91,7 @@ const LoginPage = () => {
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 bg-slate-50">
+      <div className="flex-1 flex items-center justify-center px-5 py-8 sm:py-12 bg-slate-50">
         <div className="w-full max-w-md animate-fadeIn">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2.5 mb-8">

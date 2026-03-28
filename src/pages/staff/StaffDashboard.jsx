@@ -46,12 +46,12 @@ const StaffDashboard = () => {
       {!loading && (
         <>
           {/* Header */}
-          <div className="mb-8 animate-fadeIn">
-            <p className="text-sm text-slate-400 font-medium">{today}</p>
-            <h1 className="font-heading font-bold text-2xl sm:text-3xl text-slate-900 mt-1">
+          <div className="mb-6 animate-fadeIn">
+            <p className="text-xs text-slate-400 font-medium">{today}</p>
+            <h1 className="font-heading font-bold text-xl sm:text-3xl text-slate-900 mt-0.5">
               Welcome back, {firstName}
             </h1>
-            <p className="text-sm text-slate-500 mt-1">Here's what's going on in your lab today.</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">Here's what's going on in your lab today.</p>
           </div>
 
           {/* Stats */}
@@ -80,7 +80,7 @@ const StaffDashboard = () => {
 
           {/* Recent patients */}
           <div className="card animate-fadeIn">
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="font-heading font-bold text-slate-900">Recent Patients</h2>
               <Link
                 to="/staff/patients"

@@ -69,7 +69,7 @@ const RegisterPage = () => {
       </div>
 
       {/* Right form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 bg-slate-50">
+      <div className="flex-1 flex items-center justify-center px-5 py-8 sm:py-12 bg-slate-50">
         <div className="w-full max-w-md animate-fadeIn">
           <div className="lg:hidden flex items-center gap-2.5 mb-8">
             <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center">
