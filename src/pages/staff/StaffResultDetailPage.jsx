@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getResultApi, toggleVisibilityApi, regenerateAiApi, deleteResultApi } from '../../api/result.api';
+import { getResultApi, toggleVisibilityApi, regenerateAiApi, deleteResultApi, sendReportEmailApi } from '../../api/result.api';
 import ResultDetail from '../../components/patient/ResultDetail';
 import PageWrapper from '../../components/common/PageWrapper';
 import Spinner from '../../components/common/Spinner';
 import useSocket from '../../hooks/useSocket';
-import { ArrowLeft, Eye, EyeOff, RefreshCw, Trash2 } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, RefreshCw, Trash2, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const StaffResultDetailPage = () => {
@@ -13,6 +13,7 @@ const StaffResultDetailPage = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
 
   const fetchResult = () => {
     getResultApi(id)
@@ -52,6 +53,18 @@ const StaffResultDetailPage = () => {
     }
   };
 
+  const handleSendEmail = async () => {
+    setSending(true);
+    try {
+      const { data } = await sendReportEmailApi(id);
+      toast.success(data.message);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to send email');
+    } finally {
+      setSending(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!confirm('Delete this result permanently?')) return;
     try {
@@ -76,6 +89,10 @@ const StaffResultDetailPage = () => {
               <button onClick={handleToggleVisibility} className="btn-secondary">
                 {result.isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 <span className="hidden sm:inline">{result.isVisible ? 'Hide' : 'Show'}</span>
+              </button>
+              <button onClick={handleSendEmail} disabled={sending} className="btn-secondary">
+                <Mail className="w-4 h-4" />
+                <span className="hidden sm:inline">{sending ? 'Sending…' : 'Email Report'}</span>
               </button>
               <button onClick={handleRegenerate} className="btn-secondary">
                 <RefreshCw className="w-4 h-4" />

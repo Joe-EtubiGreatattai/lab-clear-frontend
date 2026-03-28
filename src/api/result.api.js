@@ -10,3 +10,4 @@ export const toggleVisibilityApi = (id) => axiosClient.patch(`/results/${id}/vis
 export const regenerateAiApi = (id) => axiosClient.post(`/ai/results/${id}/regenerate`);
 export const extractFromImageApi = (image, mediaType) =>
   axiosClient.post('/ai/extract-from-image', { image, mediaType });
+export const sendReportEmailApi = (id) => axiosClient.post(`/results/${id}/send-email`);
