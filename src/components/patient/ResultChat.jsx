@@ -4,7 +4,6 @@ import { ArrowLeft, Send, Bot, User, Loader2, FlaskConical, ShieldAlert } from '
 import { chatWithResultApi } from '../../api/result.api';
 import { format } from 'date-fns';
 
-// Renders **bold** and newlines in message text
 const MessageText = ({ content }) => {
   const lines = content.split('\n').filter((l, i, arr) => !(l === '' && arr[i - 1] === ''));
   return (
@@ -31,7 +30,7 @@ const TypingDots = () => (
     {[0, 1, 2].map((i) => (
       <span
         key={i}
-        className="w-2 h-2 rounded-full bg-slate-400 animate-bounce"
+        className="w-2 h-2 rounded-full bg-primary-400/50 animate-bounce"
         style={{ animationDelay: `${i * 0.15}s`, animationDuration: '0.9s' }}
       />
     ))}
@@ -64,7 +63,6 @@ const ResultChat = ({ result }) => {
     const question = input.trim();
     if (!question || loading || disabled) return;
 
-    // Skip the local welcome message (index 0) when building context for the API
     const history = messages.slice(1);
     setMessages((prev) => [...prev, { role: 'user', content: question }]);
     setInput('');
@@ -90,36 +88,36 @@ const ResultChat = ({ result }) => {
   };
 
   return (
-    <div className="flex flex-col bg-white" style={{ height: 'calc(100vh - 64px)' }}>
+    <div className="flex flex-col bg-surface-900 h-[calc(100vh-3.5rem)] lg:h-screen">
 
-      {/* ── Top bar ── */}
-      <div className="flex-shrink-0 flex items-center gap-3 px-4 sm:px-6 py-3 border-b border-slate-100 bg-white">
+      {/* Top bar */}
+      <div className="flex-shrink-0 flex items-center gap-3 px-4 sm:px-6 py-3 border-b border-surface-600 bg-surface-800/80 backdrop-blur-xl">
         <Link
           to={`/patient/results/${result._id}`}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors flex-shrink-0"
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-surface-300 hover:text-surface-50 hover:bg-surface-700 transition-colors flex-shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
 
-        <div className="w-8 h-8 rounded-xl bg-primary-50 flex items-center justify-center flex-shrink-0">
-          <FlaskConical className="w-4 h-4 text-primary-600" strokeWidth={1.8} />
+        <div className="w-8 h-8 rounded-xl bg-primary-400/10 border border-primary-400/20 flex items-center justify-center flex-shrink-0">
+          <FlaskConical className="w-4 h-4 text-primary-400" strokeWidth={1.8} />
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-slate-800 truncate">{result.testName}</p>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm font-semibold text-surface-50 truncate">{result.testName}</p>
+          <p className="text-xs text-surface-300 font-mono">
             Collected {format(new Date(result.collectionDate), 'MMM d, yyyy')}
             {result.labName ? ` · ${result.labName}` : ''}
           </p>
         </div>
 
-        <div className="hidden sm:flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-3 py-1 text-xs font-medium flex-shrink-0">
+        <div className="hidden sm:flex items-center gap-1.5 bg-amber-400/10 text-amber-400 border border-amber-400/20 rounded-full px-3 py-1 text-xs font-medium flex-shrink-0">
           <ShieldAlert className="w-3 h-3" />
           No medical advice
         </div>
       </div>
 
-      {/* ── Messages ── */}
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6">
         {messages.map((msg, i) => (
           <div
@@ -127,23 +125,23 @@ const ResultChat = ({ result }) => {
             className={`flex items-end gap-3 animate-fadeIn ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             {msg.role === 'assistant' && (
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mb-0.5">
-                <Bot className="w-4 h-4 text-indigo-600" />
+              <div className="w-8 h-8 rounded-full bg-primary-400/15 border border-primary-400/25 flex items-center justify-center flex-shrink-0 mb-0.5">
+                <Bot className="w-4 h-4 text-primary-400" />
               </div>
             )}
 
             <div
               className={`max-w-[75%] sm:max-w-[60%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-indigo-600 text-white rounded-br-sm'
-                  : 'bg-slate-100 text-slate-700 rounded-bl-sm'
+                  ? 'bg-primary-600 text-white font-medium rounded-br-sm'
+                  : 'bg-surface-700 text-surface-50 border border-surface-600 rounded-bl-sm'
               }`}
             >
               <MessageText content={msg.content} />
             </div>
 
             {msg.role === 'user' && (
-              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0 mb-0.5">
+              <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0 mb-0.5">
                 <User className="w-4 h-4 text-white" />
               </div>
             )}
@@ -152,10 +150,10 @@ const ResultChat = ({ result }) => {
 
         {loading && (
           <div className="flex items-end gap-3 justify-start animate-fadeIn">
-            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-              <Bot className="w-4 h-4 text-indigo-600" />
+            <div className="w-8 h-8 rounded-full bg-primary-400/15 border border-primary-400/25 flex items-center justify-center flex-shrink-0">
+              <Bot className="w-4 h-4 text-primary-400" />
             </div>
-            <div className="bg-slate-100 rounded-2xl rounded-bl-sm px-4 py-3">
+            <div className="bg-surface-700 border border-surface-600 rounded-2xl rounded-bl-sm px-4 py-3">
               <TypingDots />
             </div>
           </div>
@@ -164,10 +162,10 @@ const ResultChat = ({ result }) => {
         <div ref={bottomRef} />
       </div>
 
-      {/* ── Input bar ── */}
-      <div className="flex-shrink-0 border-t border-slate-100 bg-white px-4 sm:px-8 py-4">
+      {/* Input bar */}
+      <div className="flex-shrink-0 border-t border-surface-600 bg-surface-800/80 backdrop-blur-xl px-4 sm:px-8 py-4">
         {disabled && (
-          <p className="text-xs text-amber-600 mb-3 flex items-center gap-1.5">
+          <p className="text-xs text-amber-400 mb-3 flex items-center gap-1.5">
             <Loader2 className="w-3 h-3 animate-spin" />
             Waiting for your AI summary to finish before you can ask questions…
           </p>
@@ -181,17 +179,19 @@ const ResultChat = ({ result }) => {
             onKeyDown={onKeyDown}
             disabled={loading || disabled}
             placeholder="Ask something about your results…"
-            className="flex-1 text-sm bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-slate-400 resize-none"
+            className="flex-1 text-sm bg-surface-700 border border-surface-600 rounded-2xl px-5 py-3 text-surface-50 placeholder-surface-300
+              focus:outline-none focus:border-primary-400/60 focus:shadow-input
+              disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           />
           <button
             onClick={send}
             disabled={!input.trim() || loading || disabled}
-            className="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-white hover:bg-indigo-700 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+            className="w-11 h-11 rounded-2xl bg-primary-600 flex items-center justify-center text-white hover:bg-primary-500 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>
         </div>
-        <p className="text-[11px] text-slate-400 mt-2 text-center">
+        <p className="text-[11px] text-surface-300 mt-2 text-center">
           For medical advice, diagnoses, or medications — always speak with your doctor.
         </p>
       </div>

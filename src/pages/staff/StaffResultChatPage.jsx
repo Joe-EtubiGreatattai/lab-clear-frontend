@@ -20,7 +20,7 @@ const StaffResultChatPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center" style={{ height: 'calc(100vh - 64px)' }}>
+      <div className="flex items-center justify-center h-[calc(100vh-3.5rem)] lg:h-screen">
         <Spinner size="md" message="Loading result…" />
       </div>
     );
@@ -28,8 +28,8 @@ const StaffResultChatPage = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4" style={{ height: 'calc(100vh - 64px)' }}>
-        <p className="text-sm text-red-500">{error}</p>
+      <div className="flex flex-col items-center justify-center gap-4 h-[calc(100vh-3.5rem)] lg:h-screen">
+        <p className="text-sm text-red-400">{error}</p>
         <Link to="/staff/results" className="btn-secondary">
           <ArrowLeft className="w-4 h-4" /> Back to Results
         </Link>

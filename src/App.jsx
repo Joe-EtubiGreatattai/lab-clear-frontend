@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
-import Navbar from './components/common/Navbar';
+import Sidebar from './components/common/Sidebar';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Spinner from './components/common/Spinner';
 
@@ -12,12 +12,15 @@ const RegisterPage         = lazy(() => import('./pages/auth/RegisterPage'));
 const PatientDashboard     = lazy(() => import('./pages/patient/PatientDashboard'));
 const PatientResultDetailPage = lazy(() => import('./pages/patient/ResultDetailPage'));
 const PatientResultChatPage   = lazy(() => import('./pages/patient/ResultChatPage'));
+const ProfilePage             = lazy(() => import('./pages/patient/ProfilePage'));
 const StaffDashboard       = lazy(() => import('./pages/staff/StaffDashboard'));
 const AddResultPage        = lazy(() => import('./pages/staff/AddResultPage'));
 const ManagePatientsPage   = lazy(() => import('./pages/staff/ManagePatientsPage'));
+const PatientHistoryPage   = lazy(() => import('./pages/staff/PatientHistoryPage'));
 const StaffResultDetailPage = lazy(() => import('./pages/staff/StaffResultDetailPage'));
 const StaffResultChatPage   = lazy(() => import('./pages/staff/StaffResultChatPage'));
 const AllResultsPage       = lazy(() => import('./pages/staff/AllResultsPage'));
+const DrugVerificationPage = lazy(() => import('./pages/shared/DrugVerificationPage'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -35,95 +38,65 @@ const AppRoutes = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {user && <Navbar />}
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          {/* Public */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+    <div className="min-h-screen bg-surface-50 flex">
+      {user && <Sidebar />}
 
-          {/* Patient */}
-          <Route
-            path="/patient/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['patient']}>
-                <PatientDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/patient/results/:id"
-            element={
-              <ProtectedRoute allowedRoles={['patient']}>
-                <PatientResultDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/patient/results/:id/chat"
-            element={
-              <ProtectedRoute allowedRoles={['patient']}>
-                <PatientResultChatPage />
-              </ProtectedRoute>
-            }
-          />
+      {/* Main content — offset for sidebar on desktop, top-bar on mobile */}
+      <div className={`flex-1 min-w-0 flex flex-col ${user ? 'lg:pl-64 pt-14 lg:pt-0' : ''}`}>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public */}
+            <Route path="/login"    element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-          {/* Staff */}
-          <Route
-            path="/staff/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['lab_staff']}>
-                <StaffDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/results/add"
-            element={
-              <ProtectedRoute allowedRoles={['lab_staff']}>
-                <AddResultPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/results/:id"
-            element={
-              <ProtectedRoute allowedRoles={['lab_staff']}>
-                <StaffResultDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/results/:id/chat"
-            element={
-              <ProtectedRoute allowedRoles={['lab_staff']}>
-                <StaffResultChatPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/patients"
-            element={
-              <ProtectedRoute allowedRoles={['lab_staff']}>
-                <ManagePatientsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/results"
-            element={
-              <ProtectedRoute allowedRoles={['lab_staff']}>
-                <AllResultsPage />
-              </ProtectedRoute>
-            }
-          />
+            {/* Patient */}
+            <Route path="/patient/dashboard" element={
+              <ProtectedRoute allowedRoles={['patient']}><PatientDashboard /></ProtectedRoute>
+            } />
+            <Route path="/patient/results/:id" element={
+              <ProtectedRoute allowedRoles={['patient']}><PatientResultDetailPage /></ProtectedRoute>
+            } />
+            <Route path="/patient/results/:id/chat" element={
+              <ProtectedRoute allowedRoles={['patient']}><PatientResultChatPage /></ProtectedRoute>
+            } />
+            <Route path="/patient/profile" element={
+              <ProtectedRoute allowedRoles={['patient']}><ProfilePage /></ProtectedRoute>
+            } />
 
-          {/* Fallback */}
-          <Route path="/" element={<RootRedirect />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
+            {/* Staff */}
+            <Route path="/staff/dashboard" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><StaffDashboard /></ProtectedRoute>
+            } />
+            <Route path="/staff/results/add" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><AddResultPage /></ProtectedRoute>
+            } />
+            <Route path="/staff/results/:id" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><StaffResultDetailPage /></ProtectedRoute>
+            } />
+            <Route path="/staff/results/:id/chat" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><StaffResultChatPage /></ProtectedRoute>
+            } />
+            <Route path="/staff/patients" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><ManagePatientsPage /></ProtectedRoute>
+            } />
+            <Route path="/staff/patients/:id/history" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><PatientHistoryPage /></ProtectedRoute>
+            } />
+            <Route path="/staff/results" element={
+              <ProtectedRoute allowedRoles={['lab_staff']}><AllResultsPage /></ProtectedRoute>
+            } />
+
+            {/* Shared */}
+            <Route path="/verify-drug" element={
+              <ProtectedRoute allowedRoles={['lab_staff', 'patient']}><DrugVerificationPage /></ProtectedRoute>
+            } />
+
+            {/* Fallback */}
+            <Route path="/"  element={<RootRedirect />} />
+            <Route path="*"  element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </div>
     </div>
   );
 };

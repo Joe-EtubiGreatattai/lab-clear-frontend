@@ -20,7 +20,7 @@ const ResultDetailPage = () => {
   useEffect(() => {
     getResultApi(id)
       .then(({ data }) => setResult(data.result))
-      .catch(() => setError('Result not found'))
+      .catch(() => setError('Diagnostic record not located'))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -33,7 +33,7 @@ const ResultDetailPage = () => {
 
   useSocket('result:visibility', ({ resultId, isVisible }) => {
     if (resultId !== id || isVisible) return;
-    toast.error('This result has been hidden by your lab.');
+    toast.error('This result has been archived by your clinical provider.');
     navigate('/patient/dashboard');
   });
 
@@ -60,10 +60,10 @@ const ResultDetailPage = () => {
         posY -= pageH;
         if (remaining > 0) pdf.addPage();
       }
-      pdf.save(`lab-result-${result?.testName?.replace(/\s+/g, '-') || id}.pdf`);
-      toast.success('PDF downloaded');
+      pdf.save(`medical-report-${result?.testName?.replace(/\s+/g, '-') || id}.pdf`);
+      toast.success('Clinical report exported');
     } catch {
-      toast.error('PDF export failed');
+      toast.error('Export synchronization failed');
     } finally {
       setExporting(false);
     }
@@ -71,27 +71,27 @@ const ResultDetailPage = () => {
 
   return (
     <PageWrapper
-      title="Result Details"
+      maxWidth="5xl"
+      title={result?.testName || 'Loading Report...'}
+      subtitle={result ? `Collected on ${format(new Date(result.collectionDate), 'MMMM d, yyyy')}` : 'Analyzing clinical data...'}
       action={
-        <div className="flex items-center gap-2">
-          <Link to="/patient/dashboard" className="btn-secondary !px-3">
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Back</span>
+        <div className="flex items-center gap-3">
+          <Link to="/patient/dashboard" className="w-10 h-10 rounded-full border border-surface-200 flex items-center justify-center text-surface-400 hover:bg-surface-100 transition-all">
+            <ArrowLeft className="w-5 h-5" />
           </Link>
           {result && result.aiStatus === 'done' && (
             <>
               <button
                 onClick={handleExportPDF}
                 disabled={exporting}
-                className="btn-secondary !px-3"
-                title="Export PDF"
+                className="btn-secondary !rounded-full !px-5"
               >
                 <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">{exporting ? 'Exporting…' : 'Export PDF'}</span>
+                <span>{exporting ? 'Exporting…' : 'Export'}</span>
               </button>
-              <Link to={`/patient/results/${id}/chat`} className="btn-primary !px-3">
+              <Link to={`/patient/results/${id}/chat`} className="btn-primary !rounded-full !px-5">
                 <MessageCircle className="w-4 h-4" />
-                <span className="hidden sm:inline">Ask Questions</span>
+                <span>Intelligence Chat</span>
               </Link>
             </>
           )}
@@ -100,10 +100,13 @@ const ResultDetailPage = () => {
     >
       {loading && <ResultDetailSkeleton />}
       {!loading && error && (
-        <div className="card text-center py-12 text-red-500 text-sm">{error}</div>
+        <div className="bg-white rounded-[3rem] p-24 shadow-card border border-surface-100 text-center">
+          <h4 className="font-heading font-bold text-2xl text-surface-900 mb-2">Record Offset</h4>
+          <p className="text-surface-500 max-w-sm mx-auto">{error}</p>
+        </div>
       )}
       {!loading && result && (
-        <div ref={printRef}>
+        <div ref={printRef} className="animate-fadeIn">
           <ResultDetail result={result} />
         </div>
       )}

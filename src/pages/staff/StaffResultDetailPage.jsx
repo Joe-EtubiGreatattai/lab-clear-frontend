@@ -135,16 +135,16 @@ const StaffResultDetailPage = () => {
       {!loading && result && (
         <>
           {!result.isVisible && (
-            <div className="flex items-center gap-2.5 mb-4 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 animate-fadeIn">
+            <div className="flex items-center gap-2.5 mb-4 px-4 py-3 bg-amber-400/10 border border-amber-400/20 rounded-xl text-sm text-amber-400 animate-fadeIn">
               <EyeOff className="w-4 h-4 flex-shrink-0" />
               This result is currently <strong>hidden</strong> from the patient.
             </div>
           )}
           <ResultDetail result={result} />
           {result.notes && (
-            <div className="card mt-4 border-l-4 border-l-slate-300 animate-fadeIn">
-              <h3 className="font-heading font-semibold text-slate-800 mb-2 text-sm">Internal Notes</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">{result.notes}</p>
+            <div className="card mt-4 border-l-4 border-l-surface-400 animate-fadeIn">
+              <h3 className="font-heading font-semibold text-surface-50 mb-2 text-sm">Internal Notes</h3>
+              <p className="text-sm text-surface-200 leading-relaxed">{result.notes}</p>
             </div>
           )}
         </>

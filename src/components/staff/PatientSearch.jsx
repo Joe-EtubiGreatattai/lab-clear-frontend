@@ -49,7 +49,7 @@ const PatientSearch = ({ onSelect, selected }) => {
   return (
     <div ref={ref} className="relative">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
         <input
           type="text"
           value={query}
@@ -60,22 +60,22 @@ const PatientSearch = ({ onSelect, selected }) => {
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white border border-surface-100 rounded-3xl shadow-modal max-h-72 overflow-y-auto animate-fadeIn group">
           {results.map((patient) => (
             <button
               key={patient._id}
               type="button"
               onClick={() => handleSelect(patient)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-left"
+              className="w-full flex items-center gap-4 px-5 py-4 hover:bg-surface-50 text-left transition-all first:rounded-t-3xl last:rounded-b-3xl border-b border-surface-50 last:border-0"
             >
-              <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="w-4 h-4 text-indigo-600" />
+              <div className="w-10 h-10 bg-primary-50 border border-primary-100 rounded-xl flex items-center justify-center flex-shrink-0 text-primary-600">
+                <User className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-bold text-surface-900 leading-tight">
                   {patient.firstName} {patient.lastName}
                 </p>
-                <p className="text-xs text-gray-500">MRN: {patient.mrn}</p>
+                <p className="text-[10px] font-bold text-surface-400 uppercase tracking-widest mt-0.5">MRN: <span className="font-mono text-primary-600">{patient.mrn}</span></p>
               </div>
             </button>
           ))}

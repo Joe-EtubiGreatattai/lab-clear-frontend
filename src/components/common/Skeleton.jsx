@@ -1,5 +1,7 @@
+const shimmerBase = 'bg-gradient-to-r from-surface-700 via-surface-800 to-surface-700 bg-[length:600px_100%] animate-shimmer rounded-lg';
+
 const Skeleton = ({ className = '' }) => (
-  <div className={`animate-pulse bg-slate-200 rounded-lg ${className}`} />
+  <div className={`${shimmerBase} ${className}`} />
 );
 
 export const CardSkeleton = () => (
@@ -17,7 +19,7 @@ export const CardSkeleton = () => (
 );
 
 export const TableRowSkeleton = ({ cols = 4 }) => (
-  <tr className="border-b border-slate-100">
+  <tr className="border-b border-surface-600/70">
     {Array.from({ length: cols }).map((_, i) => (
       <td key={i} className="py-3 px-4">
         <Skeleton className="h-4 w-full" />
@@ -42,7 +44,7 @@ export const ResultDetailSkeleton = () => (
         <div className="card space-y-4">
           <Skeleton className="h-16 -mx-6 -mt-6 mb-6 rounded-t-2xl" />
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="pl-4 border-l-2 border-slate-200 space-y-1">
+            <div key={i} className="pl-4 border-l-2 border-surface-600 space-y-1">
               <Skeleton className="h-4 w-1/4" />
               <Skeleton className="h-3 w-full" />
               <Skeleton className="h-3 w-3/4" />
