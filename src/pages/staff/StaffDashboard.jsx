@@ -42,7 +42,7 @@ const QuickActionCard = ({ icon: Icon, label, description, onClick, to, color = 
       </div>
       <div className="min-w-0">
         <p className="text-sm font-bold text-surface-900 leading-none tracking-tight">{label}</p>
-        <p className="text-[11px] text-surface-500 mt-1 leading-tight font-medium">{description}</p>
+        <p className="text-[11px] text-surface-600 mt-1 leading-tight font-medium">{description}</p>
       </div>
       <ArrowUpRight className="w-4 h-4 text-surface-400 flex-shrink-0 ml-auto" />
     </Tag>
@@ -117,7 +117,7 @@ const StaffDashboard = () => {
                   <ArrowUpRight className="w-5 h-5 text-surface-300 group-hover:text-primary-400 transition-colors" />
                 </div>
                 <p className="text-5xl font-heading font-bold text-surface-900 tracking-tighter mb-1">{stat.value}</p>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-surface-400">{stat.label}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-surface-600">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -130,7 +130,7 @@ const StaffDashboard = () => {
               <div className="flex items-end justify-between px-2">
                 <div>
                   <h2 className="font-heading font-bold text-3xl tracking-tighter text-surface-900 mb-1">Clinical Directory</h2>
-                  <p className="text-sm font-medium text-surface-400 uppercase tracking-widest">Recent Activity</p>
+                  <p className="text-sm font-medium text-surface-600 uppercase tracking-widest">Recent Activity</p>
                 </div>
                 <Link to="/staff/patients" className="text-sm font-bold text-primary-600 hover:underline underline-offset-8">
                   Directory Archive →
@@ -162,7 +162,7 @@ const StaffDashboard = () => {
                                 {p.firstName} {p.lastName}
                               </p>
                               <div className="flex items-center gap-3 mt-1.5">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-surface-400 px-2 py-0.5 bg-surface-100 rounded-md">ID: {p.mrn}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-surface-600 px-2 py-0.5 bg-surface-100 rounded-md">ID: {p.mrn}</span>
                                 {p.userId && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />}
                               </div>
                             </div>

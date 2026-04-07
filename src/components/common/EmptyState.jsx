@@ -4,7 +4,7 @@ const EmptyState = ({ icon: Icon, title, description, action }) => (
       {Icon && <Icon className="w-12 h-12 text-primary-500 animate-glowPulse" strokeWidth={1} />}
     </div>
     <h3 className="font-heading font-bold text-3xl tracking-tighter text-surface-900 mb-3">{title}</h3>
-    <p className="text-sm font-medium text-surface-400 leading-relaxed text-balance">
+    <p className="text-sm font-medium text-surface-600 leading-relaxed text-balance">
       {description}
     </p>
     {action && (

@@ -22,7 +22,7 @@ const AiSection = ({ result }) => {
         </div>
         <div className="text-center">
           <p className="text-lg font-heading font-bold text-surface-900 tracking-tight">Synthesizing Clinical Intelligence</p>
-          <p className="text-sm text-surface-400 mt-1">Our medical AI is interpreting your laboratory metrics...</p>
+          <p className="text-sm text-surface-600 mt-1">Our medical AI is interpreting your laboratory metrics...</p>
         </div>
       </div>
     );
@@ -36,7 +36,7 @@ const AiSection = ({ result }) => {
         </div>
         <div>
           <p className="text-lg font-heading font-bold text-surface-900">Analysis Interrupted</p>
-          <p className="text-sm text-surface-400 mt-1">We encountered an issue synchronizing your AI summary.</p>
+          <p className="text-sm text-surface-600 mt-1">We encountered an issue synchronizing your AI summary.</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ const ResultDetail = ({ result }) => {
         <div className="flex items-center gap-4">
           <Badge status={result.status} className="!uppercase !tracking-[0.2em] !text-[10px] !px-4 !py-1.5" />
           <div className="h-4 w-px bg-surface-200" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400">Order ID: {result.testCode || result._id.slice(-8)}</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-600">Order ID: {result.testCode || result._id.slice(-8)}</span>
         </div>
         
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-surface-900 tracking-tighter leading-none">
@@ -109,7 +109,7 @@ const ResultDetail = ({ result }) => {
           </div>
           {result.patient && (
             <div className="space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Subject Account</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-surface-600">Subject Account</p>
               <p className="text-sm font-semibold text-surface-700">{result.patient.firstName} {result.patient.lastName}</p>
             </div>
           )}
@@ -129,7 +129,7 @@ const ResultDetail = ({ result }) => {
         <FlaskConical className="w-6 h-6 text-primary-500" />
         <div>
           <h3 className="font-heading font-bold text-2xl tracking-tighter text-surface-900 leading-tight">Diagnostic Summary</h3>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-surface-400 mt-0.5">Automated Intelligence Analysis</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-surface-600 mt-0.5">Automated Intelligence Analysis</p>
         </div>
       </div>
       
@@ -168,7 +168,7 @@ const ResultDetail = ({ result }) => {
                 >
                   <td className="py-6 px-10">
                     <p className="text-[15px] font-bold text-surface-900 tracking-tight leading-none group-hover:text-primary-700 transition-colors">{item.name}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mt-1.5">Lab Metric</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-surface-600 mt-1.5">Lab Metric</p>
                   </td>
                   <td className="py-6 px-4 text-right">
                     <div className="flex flex-col items-end">

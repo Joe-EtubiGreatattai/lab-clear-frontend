@@ -78,7 +78,7 @@ const ManagePatientsPage = () => {
               <h3 className="font-heading font-bold text-3xl tracking-tighter text-surface-900">
                 New Registration
               </h3>
-              <p className="text-sm font-medium text-surface-400 mt-1 uppercase tracking-widest">Electronic Health Record</p>
+              <p className="text-sm font-medium text-surface-600 mt-1 uppercase tracking-widest">Electronic Health Record</p>
             </div>
             <button onClick={() => { setShowForm(false); }} className="p-2 rounded-full hover:bg-surface-100 transition-colors">
               <X className="w-5 h-5 text-surface-400" />
@@ -157,7 +157,7 @@ const ManagePatientsPage = () => {
                               <p className="text-[17px] font-bold text-surface-900 tracking-tight leading-tight group-hover:text-primary-700 transition-colors">
                                 {p.firstName} {p.lastName}
                               </p>
-                              <p className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mt-1">Full Clinical Record</p>
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-surface-600 mt-1">Full Clinical Record</p>
                             </div>
                           </div>
                         </td>

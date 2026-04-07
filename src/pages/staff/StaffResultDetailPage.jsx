@@ -142,9 +142,9 @@ const StaffResultDetailPage = () => {
           )}
           <ResultDetail result={result} />
           {result.notes && (
-            <div className="card mt-4 border-l-4 border-l-surface-400 animate-fadeIn">
-              <h3 className="font-heading font-semibold text-surface-50 mb-2 text-sm">Internal Notes</h3>
-              <p className="text-sm text-surface-200 leading-relaxed">{result.notes}</p>
+            <div className="bg-white rounded-[2.5rem] p-8 mt-6 border border-surface-100 shadow-card border-l-4 border-l-primary-400 animate-fadeIn">
+              <h3 className="font-heading font-bold text-surface-900 mb-2 text-xs uppercase tracking-widest">Internal Notes</h3>
+              <p className="text-sm font-medium text-surface-600 leading-relaxed">{result.notes}</p>
             </div>
           )}
         </>
