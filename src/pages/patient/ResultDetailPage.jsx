@@ -6,6 +6,7 @@ import PageWrapper from '../../components/common/PageWrapper';
 import { ResultDetailSkeleton } from '../../components/common/Skeleton';
 import useSocket from '../../hooks/useSocket';
 import { ArrowLeft, Download, MessageCircle } from 'lucide-react';
+import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
 const ResultDetailPage = () => {

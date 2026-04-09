@@ -145,7 +145,7 @@ const PatientDashboard = () => {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
                 {filtered.map((result, i) => (
                   <ResultCard key={result._id} result={result} index={i} />
                 ))}
