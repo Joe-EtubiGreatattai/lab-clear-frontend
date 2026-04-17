@@ -17,6 +17,7 @@ const StaffDashboard       = lazy(() => import('./pages/staff/StaffDashboard'));
 const AddResultPage        = lazy(() => import('./pages/staff/AddResultPage'));
 const ManagePatientsPage   = lazy(() => import('./pages/staff/ManagePatientsPage'));
 const PatientHistoryPage   = lazy(() => import('./pages/staff/PatientHistoryPage'));
+const AddDiagnosisPage     = lazy(() => import('./pages/staff/AddDiagnosisPage'));
 const StaffResultDetailPage = lazy(() => import('./pages/staff/StaffResultDetailPage'));
 const StaffResultChatPage   = lazy(() => import('./pages/staff/StaffResultChatPage'));
 const AllResultsPage       = lazy(() => import('./pages/staff/AllResultsPage'));
@@ -65,30 +66,30 @@ const AppRoutes = () => {
 
             {/* Staff */}
             <Route path="/staff/dashboard" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><StaffDashboard /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><StaffDashboard /></ProtectedRoute>
             } />
             <Route path="/staff/results/add" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><AddResultPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><AddResultPage /></ProtectedRoute>
             } />
             <Route path="/staff/results/:id" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><StaffResultDetailPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><StaffResultDetailPage /></ProtectedRoute>
             } />
             <Route path="/staff/results/:id/chat" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><StaffResultChatPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><StaffResultChatPage /></ProtectedRoute>
             } />
             <Route path="/staff/patients" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><ManagePatientsPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><ManagePatientsPage /></ProtectedRoute>
             } />
             <Route path="/staff/patients/:id/history" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><PatientHistoryPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><PatientHistoryPage /></ProtectedRoute>
             } />
             <Route path="/staff/results" element={
-              <ProtectedRoute allowedRoles={['lab_staff']}><AllResultsPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor']}><AllResultsPage /></ProtectedRoute>
             } />
 
             {/* Shared */}
             <Route path="/verify-drug" element={
-              <ProtectedRoute allowedRoles={['lab_staff', 'patient']}><DrugVerificationPage /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['lab_staff', 'doctor', 'patient']}><DrugVerificationPage /></ProtectedRoute>
             } />
 
             {/* Fallback */}

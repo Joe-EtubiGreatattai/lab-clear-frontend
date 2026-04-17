@@ -5,7 +5,8 @@ import PatientForm from '../../components/staff/PatientForm';
 import Spinner from '../../components/common/Spinner';
 import EmptyState from '../../components/common/EmptyState';
 import { Link } from 'react-router-dom';
-import { PlusCircle, Edit2, Trash2, Search, FlaskConical, Users, CheckCircle, XCircle, History, X } from 'lucide-react';
+import { useAuth } from '../../auth/AuthContext';
+import { PlusCircle, Edit2, Trash2, Search, FlaskConical, Users, CheckCircle, XCircle, History, X, Shield, Globe } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const avatarColor = (str = '') => {
@@ -22,27 +23,27 @@ const avatarColor = (str = '') => {
 };
 
 const ManagePatientsPage = () => {
+  const { user } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [scope, setScope] = useState(user?.role === 'doctor' ? 'personal' : 'all');
   const [showForm, setShowForm] = useState(false);
 
-  const fetchPatients = async (q = '') => {
+  const fetchPatients = async (q = '', s = scope) => {
     setLoading(true);
     try {
-      const { data } = await getPatientsApi(q);
+      const { data } = await getPatientsApi({ search: q, scope: s });
       setPatients(data.patients);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchPatients(); }, []);
-
   useEffect(() => {
-    const t = setTimeout(() => fetchPatients(search), 300);
+    const t = setTimeout(() => fetchPatients(search, scope), 300);
     return () => clearTimeout(t);
-  }, [search]);
+  }, [search, scope]);
 
   const handleDelete = async (id, name) => {
     if (!confirm(`Deactivate ${name}?`)) return;
@@ -92,20 +93,49 @@ const ManagePatientsPage = () => {
       )}
 
       <div className="space-y-8">
-        {/* Search */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="relative group flex-1">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400 group-focus-within:text-primary-500 transition-colors" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name, MRN, or identity code..."
-              className="w-full bg-white border border-surface-200 rounded-full pl-14 pr-6 py-4 text-sm focus:border-primary-400 focus:shadow-input transition-all"
-            />
+        {/* Search & Scoping */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex-1 flex flex-col sm:flex-row items-center gap-4">
+            <div className="relative group flex-1 w-full">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400 group-focus-within:text-primary-500 transition-colors" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by name, MRN, or identity code..."
+                className="w-full bg-white border border-surface-200 rounded-full pl-14 pr-6 py-4 text-sm focus:border-primary-400 focus:shadow-input transition-all"
+              />
+            </div>
+
+            {/* Scoping Toggle */}
+            <div className="flex p-1 bg-surface-100 border border-surface-200 rounded-full w-full sm:w-auto flex-shrink-0">
+              <button
+                onClick={() => setScope('personal')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-200 ${
+                  scope === 'personal'
+                    ? 'bg-white text-primary-600 shadow-sm border border-surface-200/50'
+                    : 'text-surface-500 hover:text-surface-700'
+                }`}
+              >
+                <Shield className="w-3.5 h-3.5" />
+                My Patients
+              </button>
+              <button
+                onClick={() => setScope('all')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-200 ${
+                  scope === 'all'
+                    ? 'bg-white text-primary-600 shadow-sm border border-surface-200/50'
+                    : 'text-surface-500 hover:text-surface-700'
+                }`}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                Global Search
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-surface-100 rounded-full border border-surface-200">
+
+          <div className="flex items-center gap-2 px-4 py-2 bg-surface-100 rounded-full border border-surface-200 self-start lg:self-auto">
             <Users className="w-4 h-4 text-surface-500" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-surface-600">{patients.length} Records</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-surface-600">{patients.length} {scope === 'personal' ? 'Owned' : 'Total'} Records</span>
           </div>
         </div>
 

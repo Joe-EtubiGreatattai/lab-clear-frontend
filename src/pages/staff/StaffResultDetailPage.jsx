@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getResultApi, toggleVisibilityApi, regenerateAiApi, deleteResultApi, sendReportEmailApi } from '../../api/result.api';
+import { useAuth } from '../../auth/AuthContext';
 import ResultDetail from '../../components/patient/ResultDetail';
 import PageWrapper from '../../components/common/PageWrapper';
 import Spinner from '../../components/common/Spinner';
 import useSocket from '../../hooks/useSocket';
-import { ArrowLeft, Eye, EyeOff, RefreshCw, Trash2, Mail, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, RefreshCw, Trash2, Mail, MessageSquare, Stethoscope } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const StaffResultDetailPage = () => {
+  const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
@@ -89,6 +91,16 @@ const StaffResultDetailPage = () => {
             <Link to={`/staff/results/${id}/chat`} className="btn-primary !px-3" title="Ask AI">
               <MessageSquare className="w-4 h-4" />
               <span className="hidden sm:inline">Ask AI</span>
+            </Link>
+          )}
+          {result && user?.role === 'doctor' && (
+            <Link 
+              to={`/staff/patients/${result.patient?._id}/history#diagnosis`} 
+              className="btn-primary bg-emerald-600 border-emerald-500 hover:bg-emerald-700 hover:border-emerald-600 !px-3 shadow-glow-emerald" 
+              title="Set Diagnosis"
+            >
+              <Stethoscope className="w-4 h-4" />
+              <span className="hidden sm:inline">Diagnosis</span>
             </Link>
           )}
           {result && (

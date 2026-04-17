@@ -11,7 +11,7 @@ const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Valid email required'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.enum(['patient', 'lab_staff']),
+  role: z.enum(['patient', 'lab_staff', 'doctor']),
   dateOfBirth: z.string().optional(),
 });
 
@@ -30,7 +30,7 @@ const RegisterPage = () => {
   const onSubmit = async (data) => {
     try {
       const user = await registerUser(data);
-      toast.success('Account created! Welcome to LabClear.');
+      toast.success('Account created! Welcome to LabCare.');
       navigate(user.role === 'patient' ? '/patient/dashboard' : '/staff/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -58,7 +58,7 @@ const RegisterPage = () => {
             <FlaskConical className="w-8 h-8 text-primary-600" />
           </div>
           <h2 className="font-heading font-bold text-3xl text-surface-900 mb-4">
-            Join <span className="text-primary-600">LabClear</span>
+            Join <span className="text-primary-600">LabCare</span>
           </h2>
           <p className="text-surface-600 leading-relaxed font-medium">
             Get instant access to your lab results with AI-powered explanations in plain English.
@@ -83,8 +83,9 @@ const RegisterPage = () => {
             {/* Role toggle */}
             <div className="flex rounded-xl bg-surface-50 border border-surface-100 p-1 mb-6">
               {[
-                { value: 'patient',   label: 'I am a Patient' },
-                { value: 'lab_staff', label: 'Lab Staff'       },
+                { value: 'patient',   label: 'Patient'   },
+                { value: 'doctor',    label: 'Doctor'    },
+                { value: 'lab_staff', label: 'Lab Staff' },
               ].map(({ value, label }) => (
                 <label key={value} className="flex-1 cursor-pointer">
                   <input type="radio" {...register('role')} value={value} className="sr-only" />

@@ -41,7 +41,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  const links = user?.role === 'lab_staff' ? staffLinks : patientLinks;
+  const links = ['lab_staff', 'doctor'].includes(user?.role) ? staffLinks : patientLinks;
 
   const handleLogout = () => {
     logout();
@@ -65,7 +65,7 @@ const Navbar = () => {
               <div className="w-10 h-10 bg-primary-400/10 border border-primary-400/20 rounded-xl flex items-center justify-center group-hover:shadow-glow transition-all duration-500">
                 <FlaskConical className="w-5 h-5 text-primary-400" strokeWidth={2.5} />
               </div>
-              <span className="font-heading font-bold text-xl text-surface-50 tracking-tighter">Lab<span className="text-primary-400">Clear</span></span>
+              <span className="font-heading font-bold text-xl text-surface-50 tracking-tighter">Lab<span className="text-primary-400">Care</span></span>
             </Link>
 
             {/* Desktop nav links */}

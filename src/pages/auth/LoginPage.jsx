@@ -79,7 +79,7 @@ const LoginPage = () => {
         </div>
 
         <p className="relative z-10 text-[10px] font-bold uppercase tracking-widest text-surface-500">
-          © {new Date().getFullYear()} LabClear · Est. 2024
+          © {new Date().getFullYear()} LabCare · Est. 2024
         </p>
       </div>
 
@@ -91,7 +91,7 @@ const LoginPage = () => {
             <div className="w-11 h-11 bg-primary-400/10 border border-primary-400/20 rounded-xl flex items-center justify-center">
               <FlaskConical className="w-5 h-5 text-primary-400" />
             </div>
-            <span className="font-heading font-bold text-2xl text-surface-900 tracking-tighter">LabClear</span>
+            <span className="font-heading font-bold text-2xl text-surface-900 tracking-tighter">LabCare</span>
           </div>
 
           <div className="mb-10">
@@ -141,7 +141,7 @@ const LoginPage = () => {
 
           <div className="mt-12 pt-8 border-t border-surface-200">
             <p className="text-center text-sm text-surface-500 font-medium">
-              New to LabClear?{' '}
+              New to LabCare?{' '}
               <Link to="/register" className="text-primary-600 font-bold hover:underline underline-offset-4 decoration-primary-400/40">
                 Register Portal Access
               </Link>

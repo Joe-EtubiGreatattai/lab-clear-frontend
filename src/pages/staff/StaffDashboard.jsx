@@ -85,7 +85,7 @@ const StaffDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                label: 'Global Patients',
+                label: user?.role === 'doctor' ? 'My Patients' : 'Global Patients',
                 value: patients.length,
                 icon: Users,
                 color: 'text-surface-900',
@@ -144,7 +144,11 @@ const StaffDashboard = () => {
                       icon={Users}
                       title="No records found"
                       description="The clinical database is currently empty."
-                      action={{ label: 'Add Patient', onClick: () => navigate('/staff/patients') }}
+                      action={
+                        <button onClick={() => navigate('/staff/patients')} className="btn-primary mt-6">
+                          Add Patient
+                        </button>
+                      }
                     />
                   </div>
                 ) : (

@@ -47,7 +47,7 @@ const Logo = () => (
       <FlaskConical className="w-4 h-4 text-white" strokeWidth={2.5} />
     </div>
     <span className="font-heading font-bold text-lg text-surface-900 tracking-tight">
-      Lab<span className="text-primary-600">Clear</span>
+      Lab<span className="text-primary-600">Care</span>
     </span>
   </div>
 );
@@ -57,7 +57,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const links = user?.role === 'lab_staff' ? staffLinks : patientLinks;
+  const links = ['lab_staff', 'doctor'].includes(user?.role) ? staffLinks : patientLinks;
 
   const handleLogout = () => {
     logout();
@@ -86,7 +86,7 @@ const Sidebar = () => {
       {/* Nav section label */}
       <div className="px-4 mb-2">
         <span className="text-[10px] font-bold text-surface-400 uppercase tracking-widest font-mono">
-          {user?.role === 'lab_staff' ? 'Medical Staff' : 'Patient Portal'}
+          {user?.role === 'doctor' ? 'Doctor Portal' : (user?.role === 'lab_staff' ? 'Laboratory Staff' : 'Patient Portal')}
         </span>
       </div>
 

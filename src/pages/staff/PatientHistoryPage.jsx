@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPatientApi, getPatientResultsApi } from '../../api/patient.api';
+import { useAuth } from '../../auth/AuthContext';
 import PageWrapper from '../../components/common/PageWrapper';
 import Badge from '../../components/common/Badge';
 import Spinner from '../../components/common/Spinner';
@@ -13,18 +14,18 @@ import {
   FlaskConical,
   ChevronRight,
   ArrowLeft,
-  Search,
   Activity,
-  PlusCircle
+  PlusCircle,
+  Stethoscope,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const PatientHistoryPage = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const [patient, setPatient] = useState(null);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -44,10 +45,7 @@ const PatientHistoryPage = () => {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const filteredResults = results.filter(r =>
-    r.testName.toLowerCase().includes(search.toLowerCase()) ||
-    format(new Date(r.collectionDate), 'MMM d, yyyy').toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredResults = results; // Removing search logic for now as requested to simplify
 
   if (loading && !patient) {
     return (
@@ -106,36 +104,29 @@ const PatientHistoryPage = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            {user?.role === 'doctor' && (
+              <Link
+                to={`/staff/patients/${patient._id}/add-diagnosis`}
+                className="btn-primary bg-emerald-600 border-emerald-500 hover:bg-emerald-700 hover:border-emerald-600 flex items-center gap-3 py-4 px-8 text-base shadow-glow-emerald"
+              >
+                <Stethoscope className="w-5 h-5" />
+                <span>Register Diagnostic</span>
+              </Link>
+            )}
             <Link
               to={`/staff/results/add?patient=${patient._id}`}
               className="btn-primary flex items-center gap-3 py-4 px-8 text-base shadow-glow-primary"
             >
               <PlusCircle className="w-5 h-5" />
-              <span>Register Diagnostic</span>
+              <span>Upload Lab Result</span>
             </Link>
           </div>
         </div>
       </div>
 
       <div className="flex flex-col xl:flex-row gap-12">
-        {/* Left column: Metrics & Search */}
-        <div className="xl:w-96 space-y-8">
-          <div className="bg-white rounded-[2.5rem] p-10 border border-surface-100 shadow-card">
-            <h3 className="font-heading font-bold text-surface-900 mb-8 flex items-center gap-3 text-xs uppercase tracking-[0.2em]">
-              <Search className="w-5 h-5 text-primary-500" />
-              Global Search
-            </h3>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search history..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="input-field pl-5"
-              />
-            </div>
-          </div>
-
+        {/* Left column: Summary Metrics */}
+        <div className="xl:w-80 space-y-8">
           <div className="bg-white rounded-[2.5rem] p-10 border border-surface-100 shadow-card">
             <h3 className="font-heading font-bold text-surface-900 mb-10 flex items-center gap-3 text-xs uppercase tracking-[0.2em]">
               <Activity className="w-5 h-5 text-primary-500" />
@@ -143,126 +134,120 @@ const PatientHistoryPage = () => {
             </h3>
             <div className="space-y-4">
               <div className="p-6 bg-surface-50 rounded-[2rem] flex items-center justify-between border border-surface-100">
-                <span className="text-[10px] font-bold text-surface-400 uppercase tracking-widest">Archive Depth</span>
-                <span className="text-3xl font-bold text-surface-900 font-heading tracking-tighter">{results.length} Tests</span>
+                <span className="text-[10px] font-bold text-surface-400 uppercase tracking-widest">Lab Archives</span>
+                <span className="text-3xl font-bold text-surface-900 font-heading tracking-tighter">{results.length}</span>
               </div>
-              <div className={`p-6 rounded-[2rem] flex items-center justify-between border ${
-                results.some(r => ['abnormal', 'critical'].includes(r.status))
-                  ? 'bg-red-50 border-red-100'
-                  : 'bg-surface-50 border-surface-100'
-              }`}>
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${
-                  results.some(r => ['abnormal', 'critical'].includes(r.status)) ? 'text-red-500' : 'text-surface-400'
-                }`}>Alerts Flagged</span>
-                <span className={`text-3xl font-bold font-heading tracking-tighter ${
-                  results.some(r => ['abnormal', 'critical'].includes(r.status)) ? 'text-red-500' : 'text-surface-900'
-                }`}>
-                  {results.filter(r => ['abnormal', 'critical'].includes(r.status)).length}
-                </span>
+              <div className="p-6 bg-surface-50 rounded-[2rem] flex items-center justify-between border border-surface-100">
+                <span className="text-[10px] font-bold text-surface-400 uppercase tracking-widest">Diagnoses</span>
+                <span className="text-3xl font-bold text-surface-900 font-heading tracking-tighter">{patient.diagnosisHistory?.length || 0}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right column: Results Timeline */}
+        {/* Right column: Unified Timeline */}
         <div className="flex-1">
-          {filteredResults.length === 0 ? (
-            <div className="bg-white rounded-[3rem] p-24 border border-surface-100 shadow-card">
-              <EmptyState
-                icon={History}
-                title="Historical Void"
-                description={search ? `No findings match the signature: "${search}"` : "This patient profile contains no historical clinical observations."}
-              />
-            </div>
-          ) : (
-            <div className="relative">
-              <div className="absolute left-8 top-10 bottom-10 w-[2px] bg-surface-100 hidden sm:block" />
+          {(() => {
+            const combined = [
+              ...results.map(r => ({ ...r, type: 'result', sortDate: new Date(r.collectionDate) })),
+              ...(patient.diagnosisHistory || []).map(d => ({ ...d, type: 'diagnosis', sortDate: new Date(d.date) }))
+            ].sort((a, b) => b.sortDate - a.sortDate);
 
-              <div className="space-y-8">
-                {filteredResults.map((result, idx) => (
-                  <div key={result._id} className="relative group animate-fadeIn" style={{ animationDelay: `${idx * 0.05}s` }}>
-                    <div className="absolute left-8 top-10 -ml-[11px] hidden sm:block z-10">
-                      <div className={`w-5 h-5 rounded-full border-4 border-white shadow-sm ${
-                        result.status === 'critical' ? 'bg-red-500' :
-                        result.status === 'abnormal' ? 'bg-amber-500' : 'bg-emerald-500'
-                      }`} />
-                    </div>
+            if (combined.length === 0) {
+              return (
+                <div className="bg-white rounded-[3rem] p-24 border border-surface-100 shadow-card">
+                  <EmptyState
+                    icon={History}
+                    title="Historical Void"
+                    description="This patient profile contains no historical clinical observations or laboratory results."
+                  />
+                </div>
+              );
+            }
 
-                    <div className="sm:pl-20">
-                      <Link
-                        to={`/staff/results/${result._id}`}
-                        className="block bg-white rounded-[2.5rem] p-8 border border-surface-100 shadow-card hover:border-primary-400/30 hover:shadow-hover hover:-translate-y-1 transition-all duration-500"
-                      >
-                        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8">
-                          <div className="flex-1 space-y-3">
-                            <div className="flex flex-wrap items-center gap-4">
-                              <h4 className="font-heading text-2xl font-bold text-surface-900 group-hover:text-primary-700 transition-colors tracking-tighter">
-                                {result.testName}
-                              </h4>
-                              <Badge status={result.status} className="!px-3 !py-1 !text-[9px]" />
-                            </div>
-                            <div className="flex flex-wrap items-center gap-x-10 gap-y-2 text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400">
-                              <span className="flex items-center gap-2">
-                                <Calendar className="w-4 h-4 text-primary-500" />
-                                {format(new Date(result.collectionDate), 'MMMM d, yyyy')}
-                              </span>
-                              <span className="flex items-center gap-2">
-                                <FlaskConical className="w-4 h-4" />
-                                Secure Clinical Archive
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center gap-6">
-                            <div className="hidden 2xl:flex flex-col items-end">
-                              <span className="text-[10px] font-bold text-surface-300 uppercase tracking-widest mb-1">Index ID</span>
-                              <span className="text-[11px] font-mono font-bold text-surface-400">
-                                #{result._id.substring(result._id.length - 12).toUpperCase()}
-                              </span>
-                            </div>
-                            <div className="w-12 h-12 rounded-full bg-surface-50 border border-surface-100 flex items-center justify-center text-surface-400 group-hover:bg-surface-900 group-hover:text-white group-hover:border-surface-900 transition-all duration-500 shadow-sm">
-                              <ChevronRight className="w-6 h-6" />
-                            </div>
-                          </div>
-                        </div>
+            return (
+              <div className="relative">
+                <div className="absolute left-8 top-10 bottom-10 w-[2px] bg-surface-100 hidden sm:block" />
 
-                        {/* High-Density Grid Previews */}
-                        {result.rawResults && result.rawResults.length > 0 && (
-                          <div className="mt-6 pt-6 border-t border-surface-50">
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 3xl:grid-cols-8 gap-3">
-                              {result.rawResults.slice(0, 24).map((item, i) => (
-                                <div
-                                  key={i}
-                                  className={`p-3 rounded-xl border transition-all duration-300 hover:shadow-sm ${
-                                    item.flag
-                                      ? 'bg-red-50/50 border-red-100 text-red-700'
-                                      : 'bg-surface-50 border-surface-100 text-surface-600'
-                                  }`}
-                                >
-                                  <div className="text-[8px] font-bold uppercase tracking-[0.2em] mb-1 opacity-60 leading-none truncate" title={item.name}>{item.name}</div>
-                                  <div className="flex items-baseline gap-1">
-                                    <span className="text-sm font-bold font-mono tracking-tighter leading-none">
-                                      {item.value}
-                                    </span>
-                                    <span className="text-[8px] font-bold opacity-50 uppercase tracking-widest">{item.unit}</span>
+                <div className="space-y-12">
+                  {combined.map((item, idx) => (
+                    <div key={item._id || idx} className="relative group animate-fadeIn" style={{ animationDelay: `${idx * 0.05}s` }}>
+                      <div className="absolute left-8 top-10 -ml-[11px] hidden sm:block z-10">
+                        <div className={`w-5 h-5 rounded-full border-4 border-white shadow-sm ${
+                          item.type === 'diagnosis' ? 'bg-primary-600' :
+                          (item.status === 'critical' ? 'bg-red-500' :
+                          item.status === 'abnormal' ? 'bg-amber-500' : 'bg-emerald-500')
+                        }`} />
+                      </div>
+
+                      <div className="sm:pl-20">
+                        {item.type === 'diagnosis' ? (
+                          <div className="bg-white rounded-[2.5rem] p-10 border-l-8 border-l-primary-600 border border-surface-100 shadow-card hover:shadow-hover transition-all duration-500">
+                            <div className="flex flex-col lg:flex-row justify-between gap-6">
+                              <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="p-2 bg-primary-50 text-primary-600 rounded-xl">
+                                    <Stethoscope className="w-5 h-5" />
+                                  </div>
+                                  <h4 className="font-heading text-3xl font-bold text-surface-900 tracking-tight">
+                                    {item.condition}
+                                  </h4>
+                                </div>
+                                {item.notes && (
+                                  <p className="text-surface-600 font-medium leading-relaxed max-w-2xl">
+                                    {item.notes}
+                                  </p>
+                                )}
+                                <div className="pt-4 flex flex-wrap items-center gap-x-8 gap-y-3">
+                                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400">
+                                    <User className="w-3.5 h-3.5 text-primary-500" />
+                                    <span>Diagnosed By: <span className="text-surface-900">{item.diagnosedBy?.name || 'Medical Officer'}</span></span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400">
+                                    <Calendar className="w-3.5 h-3.5 text-primary-500" />
+                                    <span>{format(new Date(item.date), 'MMMM d, yyyy')}</span>
                                   </div>
                                 </div>
-                              ))}
-                              {result.rawResults.length > 24 && (
-                                <div className="flex items-center justify-center p-3 text-[9px] font-bold text-surface-400 bg-surface-50 border border-surface-100 rounded-xl uppercase tracking-[0.2em]">
-                                  + {result.rawResults.length - 24} More
-                                </div>
-                              )}
+                              </div>
                             </div>
                           </div>
+                        ) : (
+                          <Link
+                            to={`/staff/results/${item._id}`}
+                            className="block bg-white rounded-[2.5rem] p-8 border border-surface-100 shadow-card hover:border-primary-400/30 hover:shadow-hover hover:-translate-y-1 transition-all duration-500"
+                          >
+                            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8">
+                              <div className="flex-1 space-y-3">
+                                <div className="flex flex-wrap items-center gap-4">
+                                  <h4 className="font-heading text-2xl font-bold text-surface-900 group-hover:text-primary-700 transition-colors tracking-tighter">
+                                    {item.testName}
+                                  </h4>
+                                  <Badge status={item.status} className="!px-3 !py-1 !text-[9px]" />
+                                </div>
+                                <div className="flex flex-wrap items-center gap-x-10 gap-y-2 text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400">
+                                  <span className="flex items-center gap-2">
+                                    <Calendar className="w-4 h-4 text-primary-500" />
+                                    {format(new Date(item.collectionDate), 'MMMM d, yyyy')}
+                                  </span>
+                                  <span className="flex items-center gap-2">
+                                    <FlaskConical className="w-4 h-4" />
+                                    Secure Clinical Archive
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="w-12 h-12 rounded-full bg-surface-50 border border-surface-100 flex items-center justify-center text-surface-400 group-hover:bg-surface-900 group-hover:text-white group-hover:border-surface-900 transition-all duration-500">
+                                <ChevronRight className="w-6 h-6" />
+                              </div>
+                            </div>
+                          </Link>
                         )}
-                      </Link>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
       </div>
     </PageWrapper>
